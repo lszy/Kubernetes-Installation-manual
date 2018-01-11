@@ -43,7 +43,7 @@ spec:
     - --proxy-mode=iptables
     - --masquerade-all
     - --logtostderr=true
-    - --v=5
+    - --v=2
     env:
     - name: TZ
       value: UTC-8
