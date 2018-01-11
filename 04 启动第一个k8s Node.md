@@ -126,7 +126,7 @@ instance=`hostname`
 * 创建配置文件
 shell># vi /etc/kubernetes/kubelet
 ```
-KUBELET_MAIN_ARGS=" --address=0.0.0.0 --port=10250  --register-node --anonymous-auth=false  --authorization-mode=Webhook  --kubeconfig=/etc/kubernetes/Node1.k8s.com.kubeconfig --pod-infra-container-image=hub.k8s.com/google-containers/pause:3.0  --logtostderr=true --v=2 --allow-privileged=true"
+KUBELET_MAIN_ARGS=" --address=0.0.0.0 --port=10250  --register-node --anonymous-auth=false  --authorization-mode=Webhook  --kubeconfig=/etc/kubernetes/Master1.k8s.com.kubeconfig --pod-infra-container-image=hub.k8s.com/google-containers/pause:3.0  --logtostderr=true --v=2 --allow-privileged=true"
 KUBELET_NODE_NAME="--hostname-override=Node1.k8s.com"
 KUBELET_ARGS="--cluster_dns=10.254.0.10 --cluster_domain=cluster.local --client-ca-file=/etc/kubernetes/pki/ca.pem --tls-private-key-file=/etc/kubernetes/pki/Master1.k8s.com-key.pem --tls-cert-file=/etc/kubernetes/pki/Master1.k8s.com.pem --pod-manifest-path=/etc/kubernetes/kubelet.d/"
 
