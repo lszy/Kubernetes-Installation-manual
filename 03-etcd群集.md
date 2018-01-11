@@ -10,9 +10,11 @@
 本实验中，我们将在masters（etcds）.k8s.com上同时运行flannel和etcd，etcd要在flannel启动前进行相关部署，可以先启动etcd2，etcd3，然后启动etcd1的flanneld，然后启动etcd1的docker，启动etcd1的etcd1 容器部署。然后在在逐一修改etcd2和etcd3
 # 部署 #
 etcd1
-```docker run -tid -p 2379-2380:2379-2380 \
+```
+docker run -tid -p 2379-2380:2379-2380 \
 --name etcd1 \
 -h etcd1 \
+-e TZ=UTC-8 \
 -v /opt/etcd:/var/lib/etcd/ \
 --restart=always \
 hub.k8s.com/google-containers/etcd:3.1.11 \
@@ -32,6 +34,7 @@ etcd2
 docker run -tid -p 2379-2380:2379-2380 \
 --name etcd2 \
 -h etcd2 \
+-e TZ=UTC-8 \
 -v /opt/etcd:/var/lib/etcd/ \
 --restart=always \
 hub.k8s.com/google-containers/etcd:3.1.11 \
@@ -51,6 +54,7 @@ etcd3
 docker run -tid -p 2379-2380:2379-2380 \
 --name etcd3 \
 -h etcd3 \
+-e TZ=UTC-8 \
 -v /opt/etcd:/var/lib/etcd/ \
 --restart=always \
 hub.k8s.com/google-containers/etcd:3.1.11 \
