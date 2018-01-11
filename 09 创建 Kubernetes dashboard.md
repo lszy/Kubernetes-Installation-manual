@@ -1,5 +1,7 @@
 # 目的 #
 部署k8s dashboard 
+# 链接地址 #
+https://github.com/kubernetes/dashboard
 # 说明 #
 文档有不足，正在更新！
 # 创建influxdb #
