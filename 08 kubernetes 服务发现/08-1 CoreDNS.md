@@ -1,7 +1,10 @@
 # 目的 # 
 创建k8s内部解析用dns
 # 说明 #
-这部分使用CoreDNS
+这部分使用CoreDNS<br>
+群集域名： cluster.local
+地址：10.254.0.0/16
+群集服务地址： 10.254.0.10
 ## 创建coreDNS 的sa,rbac,Deployment和svc，文件为：Coredns.yaml
 
 ```
