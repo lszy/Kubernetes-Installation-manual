@@ -1,6 +1,6 @@
 因为apiserver 是无状态话的，所以可以使用简单的4层负载均衡实现高可用！下例子使用ha-proxy实现4层负载均衡和故障检查，使用keepalive实现虚拟地址
 
-创建haproxy的配置文件
+创建haproxy的配置文件,文件名为：haproxy.cfg
 ```
 global
     log         127.0.0.1 local2
