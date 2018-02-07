@@ -55,7 +55,57 @@ backend servers
     server master3 10.10.1.23:6443 weight 1 check inter 1000 rise 2 fall 2
 
 ```
-创建haproxy的staticPod文件
+创建keepalived 配置文件
+```
+! Configuration File for keepalived
+
+global_defs {
+   notification_email {
+     dblvs@jn.idc
+   }
+   notification_email_from Alexandre.Cassen@firewall.loc
+   smtp_server 127.0.0.1
+   smtp_connect_timeout 30
+   router_id LVS_DEVEL
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens33
+    virtual_router_id 51
+    priority 120
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111@2222
+    }
+    virtual_ipaddress {
+        10.10.10.20/24
+    }
+}
+
+virtual_server 10.10.10.20 8443 {
+    delay_loop 6
+    lb_algo wlc
+    lb_kind DR
+    nat_mask 255.255.255.0
+    #persistence_timeout 50
+    protocol TCP
+
+    real_server 10.10.10.21 8443 {
+        weight 1
+        TCP_CHECK {
+            connect_timeout 3
+            nb_get_retry 3
+            delay_before_retry 3
+	    connect_port 8443
+        }
+    }
+}
+
+```
+创建 haproxy 和 keepalived 的staticPod文件
+hub.k8s.com/apps/keepalived:1.4.1 这个镜像下载地址为 osixia/keepalived：1.4.1
 ha-proxy.yaml
 ```
 apiVersion: v1
@@ -95,7 +145,27 @@ spec:
     - name: check-port
       containerPort: 1080
       protocol: TCP
+  - name: keepalived
+    image: hub.k8s.com/apps/keepalived:1.4.1
+    command:
+    - '/container/tool/run'
+    - '--copy-service'
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: modules
+      mountPath: /lib/modules
+      readOnly: false
+    - name: kpconfig
+      mountPath: /container/service/keepalived/assets/keepalived.conf
+      readOnly: false
   volumes:
+  - name: modules
+    hostPath:
+      path: /lib/modules/
+  - name: kpconfig
+    hostPath:
+      path: /opt/keepalived/keepalived.conf
   - name: lib
     emptyDir: {}
   - name: config
