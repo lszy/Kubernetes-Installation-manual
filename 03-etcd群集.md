@@ -7,7 +7,16 @@
 # 前提 #
 已经安装docker，并正常运行
 # 注意 #
-本实验中，我们将在masters（etcds）.k8s.com上同时运行flannel和etcd，etcd要在flannel启动前进行相关部署，可以先启动etcd2，etcd3，然后启动etcd1的flanneld，然后启动etcd1的docker，启动etcd1的etcd1 容器部署。然后在在逐一修改etcd2和etcd3
+本实验中，我们将在masters（etcds）.k8s.com上同时运行flannel和etcd，etcd要在flannel启动前进行相关部署。因为我们在容器中运行etcd。所以需要一下步骤进行初始化：
+**步骤如下**
+* 本实验中先启动位于master2和master3的etcd2和etcd3，这样etcd群集就可以正常工作。
+* 启动etcd1(master1)的flanneld。工作正常后。——>请参照"04-启动第一个flannel"
+* 启动etcd1(master1)的docker，部署容器etcd1。
+* 逐一修改etcd2和etcd3，启动flanneld，并且重启docker
+* 最终就是全部的etcd 都运行在flannel网络的docker
+
+这部分只是说明etcd的配置，请配合"04-启动第一个flannel"。
+
 # 部署 #
 etcd1
 ```
@@ -21,7 +30,7 @@ hub.k8s.com/google-containers/etcd:3.1.11 \
 etcd -name etcd1 \
 --data-dir=/var/lib/etcd/etcd1.etcd \
 --heartbeat-interval='100' \
---election-timeout='1000' \
+--election-timeout='500' \
 --listen-client-urls=http://0.0.0.0:2379 \
 --listen-peer-urls http://0.0.0.0:2380 \
 --advertise-client-urls=http://etcd1.k8s.com:2379 \
@@ -41,7 +50,7 @@ hub.k8s.com/google-containers/etcd:3.1.11 \
 etcd -name etcd2 \
 --data-dir=/var/lib/etcd/etcd2.etcd \
 --heartbeat-interval='100' \
---election-timeout='1000' \
+--election-timeout='500' \
 --listen-client-urls=http://0.0.0.0:2379 \
 --listen-peer-urls http://0.0.0.0:2380 \
 --advertise-client-urls=http://etcd2.k8s.com:2379 \
@@ -61,7 +70,7 @@ hub.k8s.com/google-containers/etcd:3.1.11 \
 etcd -name etcd3 \
 --data-dir=/var/lib/etcd/etcd3.etcd \
 --heartbeat-interval='100' \
---election-timeout='1000' \
+--election-timeout='500' \
 --listen-client-urls=http://0.0.0.0:2379 \
 --listen-peer-urls http://0.0.0.0:2380 \
 --advertise-client-urls=http://etcd3.k8s.com:2379 \
