@@ -93,7 +93,7 @@ shell(master3)># systemctl start kubelet
 * 示例中使用flannel作为网络组件。
 
 ----------
-##启动master1（etcd1）##
+## 启动master1（etcd1）##
 配置etcd1的配置文件，随后我们启动etcd1.k8s.com
 ````
 shell(master1)># systemctl restart flanneld docker kubelet
