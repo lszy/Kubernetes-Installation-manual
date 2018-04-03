@@ -1,5 +1,5 @@
 # 目的 # 
-创建k8s内部解析用dns
+使用CoreDNS实现对k8s内部域名解析
 # 说明 #
 这部分使用CoreDNS<br>
 群集域名： cluster.local
