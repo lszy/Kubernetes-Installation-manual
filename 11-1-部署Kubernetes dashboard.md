@@ -3,8 +3,8 @@
 # 链接地址 #
 https://github.com/kubernetes/dashboard
 # 说明 #
-文档有不足，正在更新！
-# 创建influxdb #
+本文主要阐述如何安装部署dashboard！
+# 部署influxdb #
 文件名为：influxdb.yaml
 ```
 apiVersion: extensions/v1beta1
@@ -48,7 +48,7 @@ spec:
   selector:
     k8s-app: influxdb
 ```
-# 创建heapster #
+# 部署heapster #
 ```
 apiVersion: v1
 kind: ServiceAccount
@@ -111,7 +111,7 @@ spec:
   selector:
     k8s-app: heapster
 ```
-# 创建grafana （可选） # 
+# 部署grafana （可选） # 
 ```
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -186,7 +186,38 @@ spec:
   selector:
     k8s-app: grafana
 ```
-# 创建dashboard #
+
+
+# 部署dashboard #
+
+## 注意 ##
+要直接访问dashboard（无kubectl proxy），应使用有效证书建立安全的HTTPS连接。我们使用自有的证书颁发机构生成dashboard证书。使用它们替换仪表板中的自动生成的证书。<br>
+
+## 生成保密字典 ##
+你有dashboard.crt和dashboard.key存储在./certs目录下的文件,你可以使用如下命令创建名称为“kubernetes-dashboard-certs”的保密字典
+```
+shell># kubectl create secret generic kubernetes-dashboard-certs --from-file=$HOME/certs -n kube-system
+```
+** 验证 ** 
+```
+shell># kubectl get secrets kubernetes-dashboard-certs  -n kube-system
+NAME                         TYPE      DATA      AGE
+kubernetes-dashboard-certs   Opaque    2         0d
+shell># kubectl describe secrets kubernetes-dashboard-certs  -n kube-system
+Name:         kubernetes-dashboard-certs
+Namespace:    kube-system
+Labels:       <none>
+Annotations:  <none>
+
+Type:  Opaque
+
+Data
+====
+dashboard.crt:  1399 bytes
+dashboard.key:  1675 bytes
+```
+## 部署dashboard ##
+创建Kubernetes-dashboard.yaml
 ```
 # Copyright 2017 The Kubernetes Authors.
 #
@@ -209,14 +240,14 @@ spec:
 
 # ------------------- Dashboard Secret ------------------- #
 
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
-  name: kubernetes-dashboard-certs
-  namespace: kube-system
-type: Opaque
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  labels:
+#    k8s-app: kubernetes-dashboard
+#  name: kubernetes-dashboard-certs
+#  namespace: kube-system
+#type: Opaque
 
 ---
 # ------------------- Dashboard Service Account ------------------- #
@@ -313,7 +344,7 @@ spec:
           # Uncomment the following line to manually specify Kubernetes API server Host
           # If not specified, Dashboard will attempt to auto discover the API server and connect
           # to it. Uncomment only if the default does not work.
-          - --apiserver-host=http://10.10.10.21:8080
+          - --apiserver-host=http://10.10.1.21:8080
           - --authentication-mode=kubeconfig
         volumeMounts:
         - name: kubernetes-dashboard-certs
