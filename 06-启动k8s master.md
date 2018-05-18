@@ -204,7 +204,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 创建CluseRoleBing “read-secrets-global” 并与“system:nodes”组绑定在一起，赋予system:nodes组内所有成员（所有node节点，单个用户名为：“system:node:Node1.k8s.com”）读取全部secrets的权限
-## 设置node节点role ##
+## 设置节点role ##
 为方便管理和操作。我们对k8s中的全部节点使用role标签。操作如下
 ```
 kubectl label node master1.k8s.com kubernetes.io/role=master
