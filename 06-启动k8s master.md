@@ -204,17 +204,18 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 创建CluseRoleBing “read-secrets-global” 并与“system:nodes”组绑定在一起，赋予system:nodes组内所有成员（所有node节点，单个用户名为：“system:node:Node1.k8s.com”）读取全部secrets的权限
-##设置node节点role##
+## 设置node节点role ##
+为方便管理和操作。我们对k8s中的全部节点使用role标签。操作如下
 ```
 kubectl label node master1.k8s.com kubernetes.io/role=master
 ```
-###验证###
+### 验证 ###
 ```
 kubectl get nodes -w
 NAME              STATUS    ROLES     AGE       VERSION
 master1.k8s.com   Ready     master    106d      v1.9.0
 ```
-###特别说明###
+### 特别说明 ###
 特别感谢：http://www.recall704.com/cloud/k8s-node-roles/
 通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/<role>="" 和 kubernetes.io/role="<role>" 来定义角色。
 所以 master 可以这样
