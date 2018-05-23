@@ -198,7 +198,7 @@ spec:
 ```
 shell># kubectl create secret generic kubernetes-dashboard-certs --from-file=$HOME/certs -n kube-system
 ```
-** 验证 ** 
+**验证** 
 ```
 shell># kubectl get secrets kubernetes-dashboard-certs  -n kube-system
 NAME                         TYPE      DATA      AGE
