@@ -15,7 +15,7 @@ metadata:
 ### 创建 ClusterRoleBinding ###
 In most cases after provisioning our cluster using kops or kubeadm or any other popular tool admin Role already exists in the cluster. We can use it and create only RoleBinding for our ServiceAccount.
 
-** 注意 ** ClusterRoleBinding 的 apiVersion 资源可能会因为k8s版本不同导致不一致。 
+**注意** ClusterRoleBinding 的 apiVersion 资源可能会因为k8s版本不同导致不一致。 
 ```
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
