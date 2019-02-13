@@ -9,7 +9,7 @@
 ## 启动配置文件 ##
 shell># vi /etc/systemd/system/kubelet.service
 ```
-Unit]
+【Unit]
 Description=Kubernetes Kubelet Server
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 After=docker.service
@@ -27,27 +27,10 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 ## 创建kubeconfig文件 ##
+这部分我们集成到“证书”章节中的kubelet中子章节中，在nodes.sh中自动生成。<br>
+生成完成后，我们可以通过命令将生成的文件发送到节点服务器，以Node1.k8s.com为例。
 ```
-instance=`hostname`
-  kubectl config set-cluster kubernetes \
-    --certificate-authority=ca.pem \
-    --embed-certs=true \
-    --server=https://master.k8s.com \
-    --kubeconfig=${instance}.kubeconfig
-
-  kubectl config set-credentials system:node:${instance} \
-    --client-certificate=${instance}.pem \
-    --client-key=${instance}-key.pem \
-    --embed-certs=true \
-    --kubeconfig=${instance}.kubeconfig
-
-  kubectl config set-context default \
-    --cluster=kubernetes \
-    --user=system:node:${instance} \
-    --kubeconfig=${instance}.kubeconfig
-
-  kubectl config use-context default --kubeconfig=${instance}.kubeconfig
-
+shell># scp Node1.k8s.com* Node1.k8s.com:/etc/kubernetes/
 ```
 
 ## 创建配置文件 ##
