@@ -123,6 +123,32 @@ spec:
 上述文件中，需要将证书文件放到指定的主机目录中。
 重启kubelet
 
+
+参数|含义|默认值
+----|---|----
+--bind-address |HTTPS 安全接口的监听地址|0.0.0.0|
+--insecure-bind-address |HTTP不安全接口的监听地址|127.0.0.1|
+--secure-port |HTTPS 安全接口的监听端口|6443|
+--insecure-port |HTTP不安全接口的监听端口|8080|
+--apiserver-count |apisever的数量|1|
+--service-cluster-ip-range |service 要使用的网段，使用 CIDR 格式，参考 kubernetes 中 service 的定义|
+--client-ca-file |
+--service-account-key-file |
+--tls-ca-file |
+--tls-cert-file |
+--tls-private-key-file |
+--kubelet-certificate-authority |
+--kubelet-client-certificate |
+--kubelet-client-key |
+--kubelet-https |
+--admission-control |准入控制|AlwaysAdmit|
+--advertise-address |通过该 ip 地址向集群其他节点公布 api server 的信息，必须能够被其他节点访问|null|
+--authorization-mode |授权模式 ，安全接口上的授权|AlwaysAllow|
+--allow-privileged |是否允许 privileged 容器运行|false|
+--etcd-servers |
+
+
+
 ## 验证 ##
 shell># kubectl get cs
 ````
@@ -209,6 +235,9 @@ roleRef:
 ```
 kubectl label node master1.k8s.com kubernetes.io/role=master
 ```
+## 配置说明 ##
+这个章节将对上面配置文件参数说明。
+**apiserver 配置说明 **
 ### 验证 ###
 ```
 kubectl get nodes -w
@@ -222,3 +251,6 @@ master1.k8s.com   Ready     master    106d      v1.9.0
 ```
 kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true
 ```
+## 其它节点 ##
+在本实验中，我们需要有3个master节点，上例中为master1的配置过程，所以我们需要按照如上步骤在部署两个master节点。
+**说明:**修改“kube-master.yaml”中的“--advertise-address”为master2、master3的地址。
